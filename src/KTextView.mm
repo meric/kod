@@ -241,6 +241,27 @@ static CGFloat kColumnGuideWidth = 1.0;
     [self setTextColor:[NSColor colorWithCalibratedWhite:0.9 alpha:1.0]];
   }
 
+  // body/document line height
+  if (bodyStyle) {
+    CGFloat lineHeight = bodyStyle.lineHeight;
+    NSMutableDictionary *typingAttributes = [[self typingAttributes] mutableCopy];
+    NSParagraphStyle *aParagraphStyle = [typingAttributes objectForKey:NSParagraphStyleAttributeName];
+    if (aParagraphStyle == nil) {
+      aParagraphStyle = [self defaultParagraphStyle];
+    }
+    if (aParagraphStyle == nil) {
+      aParagraphStyle = [NSParagraphStyle defaultParagraphStyle];
+    }
+    NSMutableParagraphStyle *newParagraphStyle = [aParagraphStyle mutableCopy];
+    [newParagraphStyle setLineSpacing:lineHeight]; // line-height;
+    [typingAttributes setObject:newParagraphStyle forKey:NSParagraphStyleAttributeName];
+    
+    [self setTypingAttributes:typingAttributes];
+    
+    [typingAttributes release];
+    [newParagraphStyle release];
+  }
+  
   // caret
   CSSStyle *caretStyle = [style styleForElementName:@"caret"];
   color = caretStyle ? caretStyle.color : nil;
